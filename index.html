@@ -3,31 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roastery AI - Dost ki Bezatti</title>
+    <title>Roast AI - Savage Mode</title>
     <style>
-        /* Basic Design - Aap ise baad mein badal sakte hain */
-        body { font-family: sans-serif; background-color: #121212; color: white; text-align: center; padding: 50px; }
-        .container { background: #1e1e1e; padding: 30px; border-radius: 15px; box-shadow: 0 0 20px rgba(255,0,0,0.5); }
-        input { padding: 10px; width: 80%; border-radius: 5px; border: none; margin-bottom: 20px; }
-        button { padding: 10px 20px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
-        #responseText { margin-top: 20px; font-size: 1.2rem; color: #ffcc00; font-style: italic; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #000; color: white; text-align: center; padding: 50px; }
+        .container { background: #111; padding: 30px; border-radius: 20px; border: 2px solid #ff0000; box-shadow: 0 0 20px rgba(255,0,0,0.5); max-width: 500px; margin: auto; }
+        h1 { color: #ff0000; text-transform: uppercase; }
+        input { padding: 12px; width: 80%; border-radius: 8px; border: 1px solid #444; background: #222; color: white; margin-bottom: 20px; }
+        button { padding: 12px 25px; background: #ff0000; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #responseText { margin-top: 30px; font-size: 1.2rem; color: #00ff00; font-weight: bold; line-height: 1.5; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>🔥 Roastery AI 🔥</h1>
-        <p>Doston ki bezatti ab AI karega!</p>
+        <h1>🔥 ROAST AI 🔥</h1>
+        <p>Apna naam likho aur bezatti ka maza lo!</p>
         
-        <input type="text" id="userInput" placeholder="Apne dost ka naam ya kuch likho...">
+        <input type="text" id="userInput" placeholder="Yahan kuch likho...">
         <br>
         <button onclick="generateRoast()">BEZATTI KARO</button>
 
-        <div id="responseText">Roast yahan dikhega...</div>
+        <div id="responseText">Tera roast yahan aayega... 😎</div>
     </div>
 
     <script>
-        // Aapki Gemini API Key
+        // Aapki New API Key pehle se set hai
         const API_KEY = "AIzaSyDoL9vySXpGqb1GXpUjQS2DbxkyaFs2KRE";
 
         async function generateRoast() {
@@ -35,31 +35,44 @@
             const responseText = document.getElementById("responseText");
 
             if (!userInput) {
-                alert("Bhai, pehle kuch likh to sahi!");
+                alert("Abe kuch likh to sahi! Dar gaya kya?");
                 return;
             }
 
-            responseText.innerText = "Ruk beta, tera mazaak taiyar ho raha hai... 💀";
+            responseText.innerText = "Ruk beta, tere liye kuch 'special' soch raha hoon... 💀";
 
             try {
-                const response = await fetch(`https://googleapis.com{API_KEY}`, {
+                // Correct URL with Model Name and API Key
+                const url = `https://googleapis.com{API_KEY}`;
+                
+                const response = await fetch(url, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
                         contents: [{
                             parts: [{ 
-                                text: `System Instruction: You are a savage roasting AI. Give a unique, short, and hilarious roast in Hinglish based on: ${userInput}. Never repeat previous jokes.` 
+                                text: `System Instruction: You are a savage, hilarious, and creative roasting AI. Give a unique, short, and funny roast in Hinglish for: ${userInput}. Never repeat jokes.` 
                             }]
                         }],
-                        generationConfig: { temperature: 1.0 }
+                        generationConfig: {
+                            temperature: 1.0,
+                            maxOutputTokens: 150
+                        }
                     })
                 });
 
                 const data = await response.json();
-                const roast = data.candidates[0].content.parts[0].text;
-                responseText.innerText = roast;
+                
+                // Correct way to read Gemini's response
+                if (data.candidates && data.candidates[0].content.parts[0].text) {
+                    const roast = data.candidates[0].content.parts[0].text;
+                    responseText.innerText = roast;
+                } else {
+                    responseText.innerText = "Lagta hai tera naseeb itna bura hai ki AI ne bhi mana kar diya.";
+                }
 
             } catch (error) {
+                console.error(error);
                 responseText.innerText = "Error! Shayad tera internet bhi tera mazaak uda raha hai.";
             }
         }
