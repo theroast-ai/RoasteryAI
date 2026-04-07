@@ -1,55 +1,69 @@
-<script>
-    // Aapki Gemini API Key yahan set hai
-    const API_KEY = "AIzaSyB_D05HI2FKeav9yurdHlbO-nErhlThaEM";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roastery AI - Dost ki Bezatti</title>
+    <style>
+        /* Basic Design - Aap ise baad mein badal sakte hain */
+        body { font-family: sans-serif; background-color: #121212; color: white; text-align: center; padding: 50px; }
+        .container { background: #1e1e1e; padding: 30px; border-radius: 15px; box-shadow: 0 0 20px rgba(255,0,0,0.5); }
+        input { padding: 10px; width: 80%; border-radius: 5px; border: none; margin-bottom: 20px; }
+        button { padding: 10px 20px; background: red; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; }
+        #responseText { margin-top: 20px; font-size: 1.2rem; color: #ffcc00; font-style: italic; }
+    </style>
+</head>
+<body>
 
-    async function generateRoast() {
-        const userInput = document.getElementById("userInput").value;
-        const responseText = document.getElementById("responseText");
+    <div class="container">
+        <h1>🔥 Roastery AI 🔥</h1>
+        <p>Doston ki bezatti ab AI karega!</p>
+        
+        <input type="text" id="userInput" placeholder="Apne dost ka naam ya kuch likho...">
+        <br>
+        <button onclick="generateRoast()">BEZATTI KARO</button>
 
-        // Agar input khali hai
-        if (!userInput || userInput.trim() === "") {
-            alert("Abe kuch likh to sahi! Khali dimaag ki tarah khali box mat chhod.");
-            return;
-        }
+        <div id="responseText">Roast yahan dikhega...</div>
+    </div>
 
-        // Loading message dikhana
-        responseText.innerText = "Ruk beta, tere liye kuch 'zeher' soch raha hoon... 🔥";
+    <script>
+        // Aapki Gemini API Key
+        const API_KEY = "AIzaSyB_D05HI2FKeav9yurdHlbO-nErhlThaEM";
 
-        try {
-            const response = await fetch(`https://googleapis.com{API_KEY}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{ 
-                            text: `System Instruction: You are a savage, funny, and extremely creative roasting AI. Give a unique, short, and hilarious roast in Hinglish (Hindi + English) based on the user's input. Never repeat your previous responses. Be unpredictable, witty, and very savage.
+        async function generateRoast() {
+            const userInput = document.getElementById("userInput").value;
+            const responseText = document.getElementById("responseText");
 
-                            User Input: ${userInput}` 
-                        }]
-                    }],
-                    generationConfig: {
-                        temperature: 1.0, // Yeh har baar naya aur creative jawab dega
-                        topP: 0.95,
-                        maxOutputTokens: 150
-                    }
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.candidates && data.candidates[0].content.parts[0].text) {
-                const roast = data.candidates[0].content.parts[0].text;
-                responseText.innerText = roast;
-            } else {
-                responseText.innerText = "Lagta hai teri kismat hi kharab hai, AI ne bhi roast karne se mana kar diya!";
+            if (!userInput) {
+                alert("Bhai, pehle kuch likh to sahi!");
+                return;
             }
 
-        } catch (error) {
-            console.error("Error:", error);
-            responseText.innerText = "Abe yaar! Error aa gaya. Shayad tera internet bhi tera mazaak uda raha hai.";
+            responseText.innerText = "Ruk beta, tera mazaak taiyar ho raha hai... 💀";
+
+            try {
+                const response = await fetch(`https://googleapis.com{API_KEY}`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{ 
+                                text: `System Instruction: You are a savage roasting AI. Give a unique, short, and hilarious roast in Hinglish based on: ${userInput}. Never repeat previous jokes.` 
+                            }]
+                        }],
+                        generationConfig: { temperature: 1.0 }
+                    })
+                });
+
+                const data = await response.json();
+                const roast = data.candidates[0].content.parts[0].text;
+                responseText.innerText = roast;
+
+            } catch (error) {
+                responseText.innerText = "Error! Shayad tera internet bhi tera mazaak uda raha hai.";
+            }
         }
-    }
-</script>
+    </script>
 
 </body>
 </html>
